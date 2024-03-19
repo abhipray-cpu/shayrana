@@ -34,8 +34,9 @@ const router = createRouter({
     },
     {
       name: 'shayari',
-      path: '/shayari',
-      component: ShayariPage
+      path: '/shayari/:category',
+      component: ShayariPage,
+      props: true
     },
     {
       name: 'addShayai',

@@ -5,7 +5,8 @@
     </transition>
   </div>
 
-  <div id="redirect">
+  <div id="redirect" class="flex flex-col items-center justify-center">
+    <img src="./assets/logo.png" alt="Shayrana" />
     <h1 class="neumorph">
       Please switch to a mobile device content is available only on mobile device
     </h1>

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen min-h-screen top-0 left-0 m-0 pt-3 bg-purple-300">
+  <div class="w-screen min-h-screen h-auto top-0 left-0 m-0 pt-3 bg-purple-300">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -15,9 +15,7 @@
       <h2 class="text-3xl text-white font-medium self-center -mt-8">Create Account</h2>
     </div>
 
-    <div
-      class="w-100 pl-4 pr-4 mt-12 flex flex-row overflow-x-auto overflow-scrollbar-hidden gap-2"
-    >
+    <div class="w-100 pl-4 pr-4 mt-12 flex flex-row overflow-x-auto gap-2 scroll">
       <img
         src="../assets/profile/Frame 41.png"
         alt="Avatar"
@@ -295,7 +293,7 @@
       >
         Signup
       </div>
-      <span class="absolute bottom-10 text-white text-lg font-cursive"
+      <span class="absolute bottom-4 text-white text-lg font-cursive"
         >Already have an account? <strong class="text-2xl" @click="redirect">Login</strong>
       </span>
     </div>
@@ -349,5 +347,8 @@ export default {
 }
 .selected {
   border: 2px solid rgb(136, 4, 136);
+}
+.scroll::-webkit-scrollbar {
+  display: none;
 }
 </style>

@@ -1,6 +1,7 @@
 <template>
   <div
     class="w-44 h-44 rounded-xl flex flex-col items-center justify-center bg-purple-600 neumorph"
+    @click="redirect(category)"
   >
     <img src="../assets/category/devotion.png" :alt="category" v-if="category === 'Devotional'" />
     <img src="../assets/category/heartbreak.png" :alt="category" v-if="category === 'Heartbreak'" />
@@ -20,15 +21,20 @@
 
 <script>
 export default {
-  props: ['category']
+  props: ['category'],
+  methods: {
+    redirect(value) {
+      this.$router.push({ name: 'shayari', params: { category: value } })
+    }
+  }
 }
 </script>
 
 <style scoped>
 .neumorph {
   box-shadow:
-    inset 12px 12px 25px #bcbcbc71,
-    inset -12px -12px 25px #bcbcbc71;
+    inset 12px 12px 25px #bcbcbc34,
+    inset -12px -12px 25px #bcbcbc34;
   transform: translateY(5px);
   transition: transform 0.3s ease;
 }

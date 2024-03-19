@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'irish-grover': ['"Irish Grover"', 'sans-serif']
+        'irish-grover': ['"Irish Grover"', 'sans-serif'],
+        inter: ['"Inter"']
       },
       width: {
         '90vw': '90vw'
