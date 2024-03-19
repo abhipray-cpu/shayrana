@@ -246,7 +246,7 @@ export default {
     })
     const router = useRouter()
     onMounted(() => {
-      if (!isTokenValid()) router.push({ name: 'home' }) // change this to login
+      if (!isTokenValid()) router.push({ name: 'login' })
     })
     return {
       Current
