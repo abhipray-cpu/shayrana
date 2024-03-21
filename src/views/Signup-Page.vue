@@ -12,7 +12,7 @@
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
     </svg>
     <div class="flex items-center justify-center">
-      <h2 class="text-3xl text-white font-medium self-center -mt-8">Create Account</h2>
+      <h2 class="text-3xl text-white font-medium self-center -mt-11">Create Account</h2>
     </div>
 
     <div class="w-100 pl-4 pr-4 mt-12 flex flex-row overflow-x-auto gap-2 scroll">
@@ -290,30 +290,43 @@
       />
       <div
         class="w-60 h-16 flex flex-col items-center justify-center bg-purple-700 mt-8 rounded-xl button-shadow text-white text-2xl font-bold"
+        @click="submit"
       >
         Signup
       </div>
-      <span class="absolute bottom-4 text-white text-lg font-cursive"
+      <span class="fixed bottom-10 text-white text-lg font-cursive"
         >Already have an account? <strong class="text-2xl" @click="redirect">Login</strong>
       </span>
     </div>
+    <modal-comp :type="Type" v-if="Modal"></modal-comp>
   </div>
 </template>
 
 <script>
+import ModalComp from '../components/Modal-Comp.vue'
+import { isTokenValid } from '../utils/authorization'
 export default {
+  components: { ModalComp },
   data() {
     return {
       selected: 0,
       name: '',
       email: '',
       password: '',
-      confirm: ''
+      confirm: '',
+      type: '',
+      modal: false
     }
   },
   computed: {
     Selected() {
       return this.selected
+    },
+    Modal() {
+      return this.modal
+    },
+    Type() {
+      return this.type
     }
   },
   methods: {
@@ -323,7 +336,41 @@ export default {
     redirect() {
       this.$router.push({ name: 'login' })
     },
-    submit() {}
+    async submit() {
+      // validation
+      if (this.name === '' || this.email === '' || this.password === '' || this.confirm === '') {
+        alert('Please fill all details')
+        return
+      }
+      if (this.password.length < 8) {
+        alert('Password must be at least 8 characters')
+      }
+      if (this.password !== this.confirm) {
+        alert('Password do not match')
+        return
+      }
+      this.type = 'loader'
+      this.modal = true
+      const data = await this.$store.dispatch('signup', {
+        name: this.name,
+        email: this.email,
+        password: this.password,
+        dp: this.selected
+      })
+      this.modal = false
+      if (data.error) {
+        this.type = 'error'
+        this.modal = true
+        setTimeout(() => {
+          this.modal = false
+        }, 1500)
+      } else if (data.result) {
+        this.$router.push({ name: 'login' })
+      }
+    }
+  },
+  mounted() {
+    if (isTokenValid()) this.$router.push({ name: 'home' })
   }
 }
 </script>

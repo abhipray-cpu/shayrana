@@ -5,6 +5,7 @@ import PostShayari from '../views/Post-Shayari.vue'
 import ProfilePage from '../views/Profile-Page.vue'
 import ShayariPage from '../views/ShayariPage.vue'
 import SignupPage from '../views/Signup-Page.vue'
+import NotFound from '../views/Not-Found.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -42,6 +43,14 @@ const router = createRouter({
       name: 'addShayai',
       path: '/aadab',
       component: PostShayari
+    },
+    {
+      path: '/404',
+      component: NotFound
+    },
+    {
+      path: '/:catchAll(.*)',
+      redirect: '/404'
     }
   ]
 })

@@ -20,7 +20,7 @@
     </svg>
 
     <div class="w-screen flex flex-col items-center justify-center">
-      <h2 class="text-3xl font-medium font-inter text-gray-600 tracking-wider -mt-7">
+      <h2 class="text-3xl font-medium font-inter text-gray-600 tracking-wider -mt-9">
         {{ category }}
       </h2>
     </div>
@@ -29,90 +29,71 @@
       class="mt-8 w-screen flex flex-col items-center justify-center overflow-y-auto shayari-container"
     >
       <shayari-card
-        content="This is the content of shayari"
-        by="Abhipray"
-        likes="10"
-        dislike="0"
-      ></shayari-card>
-      <shayari-card
-        content="This is the content of shayari"
-        by="Abhipray"
-        likes="10"
-        dislike="0"
-      ></shayari-card>
-      <shayari-card
-        content="This is the content of shayari"
-        by="Abhipray"
-        likes="10"
-        dislike="0"
-      ></shayari-card>
-      <shayari-card
-        content="This is the content of shayari"
-        by="Abhipray"
-        likes="10"
-        dislike="0"
-      ></shayari-card>
-      <shayari-card
-        content="This is the content of shayari"
-        by="Abhipray"
-        likes="10"
-        dislike="0"
-      ></shayari-card>
-      <shayari-card
-        content="This is the content of shayari"
-        by="Abhipray"
-        likes="10"
-        dislike="0"
-      ></shayari-card>
-      <shayari-card
-        content="This is the content of shayari"
-        by="Abhipray"
-        likes="10"
-        dislike="0"
-      ></shayari-card>
-      <shayari-card
-        content="This is the content of shayari"
-        by="Abhipray"
-        likes="10"
-        dislike="0"
-      ></shayari-card>
-      <shayari-card
-        content="This is the content of shayari"
-        by="Abhipray"
-        likes="10"
-        dislike="0"
-      ></shayari-card>
-      <shayari-card
-        content="This is the content of shayari"
-        by="Abhipray"
-        likes="10"
-        dislike="0"
+        v-for="(shayari, index) in Shayari"
+        :key="index"
+        :content="shayari.content"
+        :by="shayari.by"
+        :likes="shayari.likes"
+        :dislike="shayari.dislikes"
       ></shayari-card>
     </div>
+    <modal-comp :type="Type" v-if="Modal"></modal-comp>
   </div>
 </template>
 
 <script>
 import { useRoute, useRouter } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useStore } from 'vuex'
 import ShayariCard from '../components/Shayari-Card.vue'
+import ModalComp from '../components/Modal-Comp.vue'
 export default {
   components: {
-    ShayariCard
+    ShayariCard,
+    ModalComp
   },
   setup() {
     const category = ref('')
+    const shayari = ref([])
     const route = useRoute()
     const router = useRouter()
-    onMounted(() => {
+    const type = ref('loader')
+    const modal = ref(false)
+    const Type = computed(() => {
+      return type.value
+    })
+    const Modal = computed(() => {
+      return modal.value
+    })
+    const Shayari = computed(() => {
+      return shayari.value
+    })
+    const store = useStore()
+    onMounted(async () => {
       category.value = route.params.category
+      type.value = 'loader'
+      modal.value = true
+      const data = await store.dispatch('getShayari', { value: category.value })
+      modal.value = false
+      if (data.error) {
+        type.value = 'error'
+        modal.value = true
+        setTimeout(() => {
+          modal.value = false
+        }, 1500)
+      }
+      shayari.value = data.result
     })
     const redirect = () => {
       router.push({ name: 'home' })
     }
+
     return {
       category,
-      redirect
+      redirect,
+      Type,
+      Modal,
+      Shayari
     }
   }
 }

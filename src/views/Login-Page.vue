@@ -1,5 +1,5 @@
 <template>
-  <div class="w-screen min-h-screen top-0 left-0 m-0 pt-3 bg-purple-300">
+  <div class="w-screen min-h-screen h-auto top-0 left-0 m-0 pt-3 bg-purple-300">
     <div class="flex flex-col items-center justify-center">
       <img src="../assets/logo.png" alt="Shayrana" class="mb-2 w-80 h-50" />
       <h3 class="text-5xl text-yellow-500 font-bold -mt-9 font-irish-grover tracking-wider">
@@ -28,26 +28,62 @@
         Login
       </div>
 
-      <span class="absolute bottom-10 text-white text-lg font-cursive"
+      <span class="fixed bottom-6 text-white text-lg font-cursive"
         >Don't have an account? <strong class="text-2xl" @click="redirect">Signup</strong>
       </span>
     </div>
+    <modal-comp :type="Type" v-if="Modal"></modal-comp>
   </div>
 </template>
 
 <script>
+import ModalComp from '../components/Modal-Comp.vue'
+import { isTokenValid } from '../utils/authorization'
 export default {
+  components: { ModalComp },
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      type: '',
+      modal: false
+    }
+  },
+  computed: {
+    Modal() {
+      return this.modal
+    },
+    Type() {
+      return this.type
     }
   },
   methods: {
     redirect() {
       this.$router.push({ name: 'signup' })
     },
-    submit() {}
+    async submit() {
+      if (this.name === '' || this.email === '') {
+        alert('please enter all details')
+      }
+      this.type = 'loader'
+      this.modal = true
+      const result = await this.$store.dispatch('login', {
+        email: this.email,
+        password: this.password
+      })
+      this.modal = false
+      if (result.error) {
+        this.type = 'error'
+        this.modal = true
+        setTimeout(() => {
+          this.modal = false
+        }, 1500)
+      }
+      this.$router.push({ name: 'home' })
+    }
+  },
+  mounted() {
+    if (isTokenValid()) this.$router.push({ name: 'home' })
   }
 }
 </script>

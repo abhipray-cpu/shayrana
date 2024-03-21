@@ -33,6 +33,7 @@
         rows="10"
         class="textarea custom-shadow rounded-2xl pt-3 pl-2 pr-3 pb-2 text-lg text-gray-700 font-inter font-medium"
         placeholder="जनाब, फरमाइए।"
+        v-model="content"
       ></textarea>
       <input
         list="options"
@@ -40,6 +41,7 @@
         name="category"
         placeholder="Please select a category"
         class="mt-7 custom-shadow rounded-2xl pt-3 pl-2 pr-3 pb-2 text-lg text-gray-700 font-inter font-medium textarea"
+        v-model="category"
       />
 
       <datalist id="options">
@@ -61,19 +63,61 @@
         Post
       </div>
     </div>
+    <modal-comp :type="Type" v-if="Modal"></modal-comp>
   </div>
 </template>
 
 <script>
 import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
+import ModalComp from '../components/Modal-Comp.vue'
+import { useStore } from 'vuex'
 export default {
+  components: { ModalComp },
   setup() {
     const router = useRouter()
+    const content = ref('')
+    const category = ref('')
+    const type = ref('')
+    const modal = ref(false)
+    const Type = computed(() => {
+      return type.value
+    })
+    const Modal = computed(() => {
+      return modal.value
+    })
     const redirect = () => {
       router.push({ name: 'home' })
     }
+    const store = useStore()
+    const submit = async () => {
+      if (content.value == '' || category.value == '') {
+        alert('Please fill all details')
+      }
+      type.value = 'loader'
+      modal.value = true
+      const data = await store.dispatch('postShayari', {
+        content: content.value,
+        category: category.value
+      })
+      modal.value = false
+
+      if (data.error) {
+        type.value = 'error'
+        modal.value = true
+        setTimeout(() => {
+          modal.value = false
+        }, 1500)
+      }
+      router.push({ name: 'home' })
+    }
     return {
-      redirect
+      redirect,
+      content,
+      category,
+      Type,
+      Modal,
+      submit
     }
   }
 }

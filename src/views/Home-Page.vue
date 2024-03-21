@@ -226,7 +226,7 @@
       <category-card category="Devotional"></category-card>
       <category-card category="Message"></category-card>
     </div>
-
+    <modal-comp :type="Type" v-if="Modal"></modal-comp>
     <bottom-navigation></bottom-navigation>
   </div>
 </template>
@@ -237,17 +237,24 @@ import { onMounted, ref, computed } from 'vue'
 import { isTokenValid } from '../utils/authorization'
 import CategoryCard from '../components/Category-Card.vue'
 import BottomNavigation from '../components/Nav-Comp.vue'
+import Cookies from 'js-cookie'
+import ModalComp from '../components/Modal-Comp.vue'
 export default {
-  components: { CategoryCard, BottomNavigation },
+  components: { CategoryCard, BottomNavigation, ModalComp },
   setup() {
     const current = ref(0)
     const Current = computed(() => {
       return current.value
     })
+
     const router = useRouter()
+
     onMounted(() => {
       if (!isTokenValid()) router.push({ name: 'login' })
+      const dp = JSON.parse(Cookies.get('dp'))
+      current.value = dp
     })
+
     return {
       Current
     }

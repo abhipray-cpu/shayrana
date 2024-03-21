@@ -231,86 +231,20 @@
       />
 
       <h2 class="mt-2 text-2xl text-gray-600 font-inter font-medium">{{ userName }}</h2>
-      <div class="mt-7 flex flex-row items-center justify-center gap-14">
-        <h3
-          :class="
-            Select == 0
-              ? 'text-xl  text-purple-500 font-inter font-medium'
-              : 'text-lg text-gray-700 font-inter font-normal'
-          "
-          @click="fetch(0)"
-        >
-          Your Shayaris
-        </h3>
-        <h3
-          :class="
-            Select == 1
-              ? 'text-xl  text-purple-500 font-inter font-medium'
-              : 'text-lg text-gray-700 font-inter font-normal'
-          "
-          @click="fetch(1)"
-        >
-          Likes Shayaris
-        </h3>
-      </div>
 
-      <div class="w-screen mt-6 flex flex-col items-center justify-center">
-        <shayari-card
-          content="This is the content of shayari"
-          by="Abhipray"
-          liked="10"
-          dislike="0"
-        ></shayari-card>
-        <shayari-card
-          content="This is the content of shayari"
-          by="Abhipray"
-          liked="10"
-          dislike="0"
-        ></shayari-card>
-        <shayari-card
-          content="This is the content of shayari"
-          by="Abhipray"
-          liked="10"
-          dislike="0"
-        ></shayari-card>
-        <shayari-card
-          content="This is the content of shayari"
-          by="Abhipray"
-          liked="10"
-          dislike="0"
-        ></shayari-card>
-        <shayari-card
-          content="This is the content of shayari"
-          by="Abhipray"
-          liked="10"
-          dislike="0"
-        ></shayari-card>
-        <shayari-card
-          content="This is the content of shayari"
-          by="Abhipray"
-          liked="10"
-          dislike="0"
-        ></shayari-card>
-        <shayari-card
-          content="This is the content of shayari"
-          by="Abhipray"
-          liked="10"
-          dislike="0"
-        ></shayari-card>
-      </div>
+      <img src="../assets/gorilla.png" alt="gorilla" class="mt-10 w-46 h-46" />
     </div>
   </div>
 </template>
 
 <script>
 import { useRouter } from 'vue-router'
-import { ref, computed } from 'vue'
-import ShayariCard from '../components/Shayari-Card.vue'
+import { ref, computed, onMounted } from 'vue'
+import Cookies from 'js-cookie'
 export default {
-  components: { ShayariCard },
   setup() {
     const router = useRouter()
-    const userName = ref('Puttanpal')
+    const userName = ref('')
     const id = ref(0)
     const select = ref(0)
     const Select = computed(() => {
@@ -322,6 +256,12 @@ export default {
     const fetch = (value) => {
       select.value = value
     }
+    onMounted(() => {
+      const name = JSON.parse(Cookies.get('username'))
+      const dp = JSON.parse(Cookies.get('dp'))
+      userName.value = name
+      id.value = dp
+    })
     return {
       redirect,
       userName,
