@@ -294,7 +294,7 @@
       >
         Signup
       </div>
-      <span class="fixed bottom-10 text-white text-lg font-cursive"
+      <span class="fixed bottom-2 text-white text-lg font-cursive"
         >Already have an account? <strong class="text-2xl" @click="redirect">Login</strong>
       </span>
     </div>
